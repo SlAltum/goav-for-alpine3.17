@@ -11,12 +11,13 @@ import "unsafe"
 func (p *Packet) Buf() *AvBufferRef {
 	return (*AvBufferRef)(p.buf)
 }
-func (p *Packet) Duration() int {
-	return int(p.duration)
+
+func (p *Packet) Duration() int64 {
+	return int64(p.duration)
 }
 
 func (p *Packet) SetDuration(duration int64) {
-     p.duration = C.int64_t(duration)
+	p.duration = C.int64_t(duration)
 }
 
 func (p *Packet) Flags() int {
@@ -37,6 +38,7 @@ func (p *Packet) StreamIndex() int {
 func (p *Packet) SetStreamIndex(idx int) {
 	p.stream_index = C.int(idx)
 }
+
 //func (p *Packet) ConvergenceDuration() int64 {
 //	return int64(p.convergence_duration)
 //}

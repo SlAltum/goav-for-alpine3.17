@@ -1,9 +1,9 @@
 // Use of this source code is governed by a MIT license that can be found in the LICENSE file.
 // Giorgis (habtom@giorgis.io)
 
-//Package avformat provides some generic global options, which can be set on all the muxers and demuxers.
-//In addition each muxer or demuxer may support so-called private options, which are specific for that component.
-//Supported formats (muxers and demuxers) provided by the libavformat library
+// Package avformat provides some generic global options, which can be set on all the muxers and demuxers.
+// In addition each muxer or demuxer may support so-called private options, which are specific for that component.
+// Supported formats (muxers and demuxers) provided by the libavformat library
 package avformat
 
 //#cgo pkg-config: libavformat libavcodec libavutil libavdevice libavfilter libswresample libswscale
@@ -55,6 +55,20 @@ func (cctxt *CodecContext) SetTimeBase(timeBase avcodec.Rational) {
 	cctxt.time_base.den = C.int(timeBase.Den())
 }
 
+func (cctxt *CodecContext) GetPktTimeBase() avcodec.Rational {
+	return newRational(cctxt.pkt_timebase)
+}
+
+func (cctxt *CodecContext) SetPktTimeBase(timeBase avcodec.Rational) {
+	cctxt.pkt_timebase.num = C.int(timeBase.Num())
+	cctxt.pkt_timebase.den = C.int(timeBase.Den())
+}
+
+func (cctxt *CodecContext) SetFramerate(timeBase avcodec.Rational) {
+	cctxt.framerate.num = C.int(timeBase.Num())
+	cctxt.framerate.den = C.int(timeBase.Den())
+}
+
 func (cctx *CodecContext) GetWidth() int {
 	return int(cctx.width)
 }
@@ -85,6 +99,14 @@ func (cctx *CodecContext) GetFlags() int {
 
 func (cctx *CodecContext) SetFlags(flags int) {
 	cctx.flags = C.int(flags)
+}
+
+func (cctx *CodecContext) GetFlags2() int {
+	return int(cctx.flags2)
+}
+
+func (cctx *CodecContext) SetFlags2(flags2 int) {
+	cctx.flags2 = C.int(flags2)
 }
 
 func (cctx *CodecContext) GetMeRange() int {
@@ -125,6 +147,14 @@ func (cctx *CodecContext) GetQCompress() float32 {
 
 func (cctx *CodecContext) SetQCompress(v float32) {
 	cctx.qcompress = C.float(v)
+}
+
+func (cctx *CodecContext) GetGopSize() int {
+	return int(cctx.gop_size)
+}
+
+func (cctx *CodecContext) SetGopSize(v int) {
+	cctx.gop_size = C.int(v)
 }
 
 func (cctx *CodecContext) GetExtraData() []byte {

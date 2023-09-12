@@ -18,13 +18,13 @@ func (avs *Stream) CodecParameters() *avcodec.AvCodecParameters {
 	return (*avcodec.AvCodecParameters)(unsafe.Pointer(avs.codecpar))
 }
 
-//func (avs *Stream) Codec() *CodecContext {
-//	return (*CodecContext)(unsafe.Pointer(avs.codec))
-//}
-//
-//func (avs *Stream) Codec1() *avcodec.Context {
-//	return (*avcodec.Context)(unsafe.Pointer(avs.codec))
-//}
+// func (avs *Stream) Codec() *CodecContext {
+// 	return (*CodecContext)(unsafe.Pointer(avs.codec))
+// }
+
+// func (avs *Stream) Codec1() *avcodec.Context {
+// 	return (*avcodec.Context)(unsafe.Pointer(avs.codec))
+// }
 
 func (avs *Stream) Metadata() *avutil.Dictionary {
 	return (*avutil.Dictionary)(unsafe.Pointer(avs.metadata))

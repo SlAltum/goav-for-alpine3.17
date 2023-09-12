@@ -36,68 +36,70 @@ type (
 )
 
 const (
-	AV_SAMPLE_FMT_U8   = int(C.AV_SAMPLE_FMT_U8)
-	AV_SAMPLE_FMT_S16  = int(C.AV_SAMPLE_FMT_S16)
-	AV_SAMPLE_FMT_S32  = int(C.AV_SAMPLE_FMT_S32)
-	AV_SAMPLE_FMT_FLT  = int(C.AV_SAMPLE_FMT_FLT)
-	AV_SAMPLE_FMT_DBL  = int(C.AV_SAMPLE_FMT_DBL)
-	AV_SAMPLE_FMT_U8P  = int(C.AV_SAMPLE_FMT_U8P)
-	AV_SAMPLE_FMT_S16P = int(C.AV_SAMPLE_FMT_S16P)
-	AV_SAMPLE_FMT_S32P = int(C.AV_SAMPLE_FMT_S32P)
-	AV_SAMPLE_FMT_FLTP = int(C.AV_SAMPLE_FMT_FLTP)
-	AV_SAMPLE_FMT_DBLP = int(C.AV_SAMPLE_FMT_DBLP)
-	AV_SAMPLE_FMT_S64  = int(C.AV_SAMPLE_FMT_S64)
-	AV_SAMPLE_FMT_S64P = int(C.AV_SAMPLE_FMT_S64P)
-	AV_SAMPLE_FMT_NB   = int(C.AV_SAMPLE_FMT_NB)
-	AV_ROUND_ZERO      = int(C.AV_ROUND_ZERO)
-	AV_ROUND_INF       = int(C.AV_ROUND_INF)
-	AV_ROUND_DOWN      = int(C.AV_ROUND_DOWN)
-	AV_ROUND_UP        = int(C.AV_ROUND_UP)
-	AV_TIME_BASE       = int(C.AV_TIME_BASE)
+	AV_SAMPLE_FMT_U8     = int(C.AV_SAMPLE_FMT_U8)
+	AV_SAMPLE_FMT_S16    = int(C.AV_SAMPLE_FMT_S16)
+	AV_SAMPLE_FMT_S32    = int(C.AV_SAMPLE_FMT_S32)
+	AV_SAMPLE_FMT_FLT    = int(C.AV_SAMPLE_FMT_FLT)
+	AV_SAMPLE_FMT_DBL    = int(C.AV_SAMPLE_FMT_DBL)
+	AV_SAMPLE_FMT_U8P    = int(C.AV_SAMPLE_FMT_U8P)
+	AV_SAMPLE_FMT_S16P   = int(C.AV_SAMPLE_FMT_S16P)
+	AV_SAMPLE_FMT_S32P   = int(C.AV_SAMPLE_FMT_S32P)
+	AV_SAMPLE_FMT_FLTP   = int(C.AV_SAMPLE_FMT_FLTP)
+	AV_SAMPLE_FMT_DBLP   = int(C.AV_SAMPLE_FMT_DBLP)
+	AV_SAMPLE_FMT_S64    = int(C.AV_SAMPLE_FMT_S64)
+	AV_SAMPLE_FMT_S64P   = int(C.AV_SAMPLE_FMT_S64P)
+	AV_SAMPLE_FMT_NB     = int(C.AV_SAMPLE_FMT_NB)
+	AV_ROUND_ZERO        = int(C.AV_ROUND_ZERO)
+	AV_ROUND_INF         = int(C.AV_ROUND_INF)
+	AV_ROUND_DOWN        = int(C.AV_ROUND_DOWN)
+	AV_ROUND_UP          = int(C.AV_ROUND_UP)
+	AV_ROUND_NEAR_INF    = int(C.AV_ROUND_NEAR_INF)
+	AV_ROUND_PASS_MINMAX = int(C.AV_ROUND_PASS_MINMAX)
+	AV_TIME_BASE         = int(C.AV_TIME_BASE)
 )
 
-//Return the LIBAvUTIL_VERSION_INT constant.
+// Return the LIBAvUTIL_VERSION_INT constant.
 func AvutilVersion() uint {
 	return uint(C.avutil_version())
 }
 
-//Return the libavutil build-time configuration.
+// Return the libavutil build-time configuration.
 func AvutilConfiguration() string {
 	return C.GoString(C.avutil_configuration())
 }
 
-//Return the libavutil license.
+// Return the libavutil license.
 func AvutilLicense() string {
 	return C.GoString(C.avutil_license())
 }
 
-//Return a string describing the media_type enum, NULL if media_type is unknown.
+// Return a string describing the media_type enum, NULL if media_type is unknown.
 func AvGetMediaTypeString(mt MediaType) string {
 	return C.GoString(C.av_get_media_type_string((C.enum_AVMediaType)(mt)))
 }
 
-//Return a single letter to describe the given picture type pict_type.
+// Return a single letter to describe the given picture type pict_type.
 func AvGetPictureTypeChar(pt AvPictureType) string {
 	return string(C.av_get_picture_type_char((C.enum_AVPictureType)(pt)))
 }
 
-//Return x default pointer in case p is NULL.
+// Return x default pointer in case p is NULL.
 func AvXIfNull(p, x int) {
 	C.av_x_if_null(unsafe.Pointer(&p), unsafe.Pointer(&x))
 }
 
-//Compute the length of an integer list.
+// Compute the length of an integer list.
 func AvIntListLengthForSize(e uint, l int, t uint64) uint {
 	return uint(C.av_int_list_length_for_size(C.uint(e), unsafe.Pointer(&l), (C.uint64_t)(t)))
 }
 
-//Open a file using a UTF-8 filename.
+// Open a file using a UTF-8 filename.
 func AvFopenUtf8(p, m string) *File {
 	f := C.av_fopen_utf8(C.CString(p), C.CString(m))
 	return (*File)(f)
 }
 
-//Return the fractional representation of the internal time base.
+// Return the fractional representation of the internal time base.
 func AvGetTimeBaseQ() Rational {
 	return (Rational)(C.av_get_time_base_q())
 }
@@ -154,6 +156,10 @@ func AvGetSampleFmtName(sampleFmt SampleFormat) string {
 	return C.GoString(C.av_get_sample_fmt_name((C.enum_AVSampleFormat)(sampleFmt)))
 }
 
+func AvRescaleQRnd(a int64, bq Rational, cq Rational, rnd AVRounding) int64 {
+	return int64(C.av_rescale_q_rnd(C.long(a), C.struct_AVRational(bq), C.struct_AVRational(cq), uint32(rnd)))
+}
+
 func AvRescaleQ(a int64, bq Rational, cq Rational) int64 {
 	return int64(C.av_rescale_q(C.int64_t(a), (C.struct_AVRational)(bq), (C.struct_AVRational)(cq)))
 }
@@ -164,4 +170,27 @@ func (r *Rational) Set(num, den int) {
 
 func AvGetTime() int64 {
 	return (int64)(C.av_gettime())
+}
+
+func AvImageGetBufferSize(pf PixelFormat, width int, height int, align int) int {
+	return int(C.av_image_get_buffer_size((C.enum_AVPixelFormat)(pf), C.int(width), C.int(height), C.int(align)))
+}
+
+func AvImageFillArrays(dstData [8]*uint8, dstLinesize [8]int32, src *uint8, pixFmt PixelFormat, width, height, align int) int {
+	return int(C.av_image_fill_arrays((**C.uint8_t)(unsafe.Pointer(&dstData)), (*C.int)(unsafe.Pointer(&dstLinesize)), (*C.uint8_t)(unsafe.Pointer(src)), C.enum_AVPixelFormat(pixFmt), C.int(width), C.int(height), C.int(align)))
+}
+
+func AvImageCopyToBuffer(dst *uint8, dstSize int,
+	srcData [8]*uint8, srcLinesize [8]int32,
+	pixFmt PixelFormat, width, height, align int) int {
+	return int(C.av_image_copy_to_buffer(
+		(*C.uint8_t)(dst),
+		C.int(dstSize),
+		(**C.uint8_t)(unsafe.Pointer(&srcData)),
+		(*C.int)(unsafe.Pointer(&srcLinesize)),
+		C.enum_AVPixelFormat(pixFmt),
+		C.int(width),
+		C.int(height),
+		C.int(align),
+	))
 }
