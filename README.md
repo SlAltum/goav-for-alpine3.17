@@ -1,7 +1,7 @@
 # goav
-基于开源工程goav升级， 最新的GO 调用FFmpeg API封装库，适配FFmpeg 5.0 "Lorentz"
+基于开源工程goav升级， 最新的GO 调用FFmpeg API封装库，适配FFmpeg 5.1.3
 
-Golang binding for latest FFmpeg(FFmpeg 5.0 "Lorentz")
+Golang binding for FFmpeg version 5.1.3
 
 A comprehensive binding to the ffmpeg video/audio manipulation library.
 
@@ -73,10 +73,32 @@ export LD_LIBRARY_PATH=$HOME/ffmpeg/lib
 go get github.com/leokinglong/goav
 
 ``` 
-
+### 在Alpine3.17镜像中安装
+``` dockerfile
+FROM golang:1.20-alpine3.17 as builder
+# 使用国内代理和镜像源
+ENV GO111MODULE=auto \
+    GOPROXY=goproxy.cn,direct
+RUN echo -e "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.17/main\nhttps://mirrors.tuna.tsinghua.edu.cn/alpine/v3.17/community" > /etc/apk/repositories
+RUN apk update
+RUN apk add --no-cache ffmpeg
+# alpine默认是只支持静态编译，不装build-base用不了cgo
+RUN apk add --no-cache build-base
+# 装git是为了将git版本信息编译进二进制程序中，方便项目后续维护，非必要
+RUN apk add --no-cache git
+# 校准时钟为北京时间
+RUN apk add --no-cache tzdata
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 
+RUN echo "Asia/Shanghai" > /etc/timezone
+# 安装dlv方便调试
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+RUN apk add --no-cache ffmpeg-dev
+RUN apk add --no-cache yasm
+```
 ## More Examples
 
 Coding examples are available in the examples/ directory.
+原始项目里面哪个tutorial01.go比较老了，很多api都已经变更了，仅作为参考。
 
 ## Note
 - Function names in Go are consistent with that of the libraries to help with easy search
